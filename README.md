@@ -1,4 +1,4 @@
-# NCHC functionality scenario test "Task A:Visual-Speed Dection"
+# NCHC scenario test "Task A:Visual-Speed Dection"
 
 ![Diagram](https://snag.gy/0QITS9.jpg)
 
