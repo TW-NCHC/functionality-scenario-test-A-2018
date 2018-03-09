@@ -2,14 +2,46 @@
 
 ![Diagram](https://snag.gy/0QITS9.jpg)
 
-This is toolkits for deploy "Task A:Visual-Speed Dection", including following scripts
+目標
+
+This is toolkits for deploy **Task A:Visual-Speed Dection**, including following scripts
 - (T1) [feed.py](feed.py) 取得即時路況資料影像，並轉換存為以時間戳記為檔名的即時影像
 - (T2) [prepare.py](prepare.py) 影像資料集轉換，此外針對低速資料集會進行擴展訓練資料工作。
 - (T3) [train.py](train.py) 可用於建模及預測，為 CRNN (Convolutional Recurrent Neural Network) 模型。
 - (T4) [pre-train model weight](https://drive.google.com/file/d/1sOK32x8buCID0mxAoz8g5o5p-YoXmjSe/view?usp=sharing) (keras save model)
 - (T5) [image samples](https://drive.google.com/file/d/1c7woFGnUlsdYvAyZ6SLR0rNyqEt4y18q/view?usp=sharing) (600+ 分鐘影像資料集，每分鐘有30張維度為 240, 352 JPEG 照片)、[cctvid-vd-dest-cctv_url.csv](cctvid-vd-dest-cctv_url.csv) (即時影像及車速偵測器地理對應表)、[requirements.txt](requirements.txt)。
 
-## (T1) feed.py
+## 整合性服務測試目標：
+
+- 處理 路況資料庫 http://tisvcloud.freeway.gov.tw/ 中 cctv_info.xml.gz 所有即時影像之各路段車速現況預測。
+- 整合系統必需能自動佈署並架設及掛載必要的運算及儲存資源。
+
+## 整合性服務測試步驟：
+
+### Step 1: 取得資料 使用(T1) 取得即時路況影像資料及車速資料。
+- 透過(T1) 工具，取得即時影像資料轉換後存放在 object storage 並以 HDFS 儲存協定存取JPEG 影像，供後續車速建模及預測使用。
+- 每 1 分鐘至「即時資料庫」 中取得各車速偵測器之平均車速數值。
+- (非必要) 「大資料分析平台」可以在資料尚未進行車速建模之前進行任何資料清理與轉換等工作，以降低車速建模時的處理時間。
+
+### Step 2: 影像資料轉換
+-  以 HDFS 儲存協定存取JPEG 影像，並使用 (T2) 工具將影像資料轉換為訓練資料集，放入高性能檔案系統。
+- 資料轉換動作必需以 container 方式執行，並在深層類神經模型訓練之前完成。
+
+### Step 3: 依即時路況影像資料進行車速建模
+- 訓練周期為每12小時建模一次。
+- 資料完成搬移後，進行深層類神經模型訓練。
+- 使用 (T3) 工具進行車速預測之深層類神經模型建立，並留存 20 epoch 中最佳準確結果之類神經權重，做為車速預測結果。
+- 最佳準確結果之類神經權重必需存放於 object storage 中，供後續預測時取用。
+
+### Step 4:進行車速預測
+- 以 HDFS 儲存協定存取JPEG 影像，並使用 (T2) 工具將影像資料轉換為 inference 資料集。
+- 使用最佳準確結果之類神經權重進行車速預測，並以 Restful API 方式即時回傳預測結果。
+
+----
+
+### 工具說明
+
+#### (T1) feed.py
 使用說明 `./feed.py -h`
 
 ```
@@ -67,7 +99,7 @@ Saving to: './cctv_imgs/speed/1520550609_vd_value.xml.gz'
 ```
 
 
-## (T2) prepare.py
+#### (T2) prepare.py
 使用說明 `./prepare.py -h`
 ```
 Usage: prepare.py [options]
@@ -116,7 +148,7 @@ dtype: int64
 Saving Sample: 100%|#####################################| 12/12 [00:00<00:00, 44.43it/s]
 ```
 
-# ./train.py
+#### (T3) train.py
 使用說明 `./train.py -h`
 本項程式會使用到 GPU 運算。
 
@@ -152,7 +184,7 @@ Options:
 
 ```
 
-### 訓練部份
+##### 訓練部份
 1. 測試訓練功能 `./train.py -e 2 -l 10` 會從預設資料集 $DATASET_PATH/$TOKEN 中取出預先整理好的資料集共 10 筆，並進行訓練 2次 (epochs)
 1. 完整資料集訓練資料集 `./train.py -e 20 -l 0 -d $DATASET_PATH -t $TOKEN -w $WEIGHT_PATH`
 
@@ -205,7 +237,7 @@ Epoch 7/20
 ...
 ```
 
-### 
+##### 預測部份
 1. 測試預測功能 `./train.py -s -i $IMG_PATH` 會自動載入在 $WEIGHT_PATH 目錄中最好的模型結果，從 `$IMG_PATH` 取得最新的車速影像(使用 T1 工具取得)的 30張進行預測。預測結果會 `http://$ADDRESS_IP:%SERVE_PORT` 以文字顯示。
 
 僅使用 CPU 進行預測的輸出結果 command line 如下：
@@ -240,7 +272,7 @@ Speed Predicting Result for (2018-03-09 07:09:36) is 90.0.
 
 
 
-# 環境參數
+### 環境參數
 - python 函式庫，請參考 `requirements.txt`
 - Tesla P100-PCIE + CUDA V9.0.176
 
