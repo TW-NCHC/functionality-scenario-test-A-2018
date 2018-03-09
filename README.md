@@ -7,7 +7,7 @@ This is toolkits for deploy "Task A:Visual-Speed Dection", including following s
 - (T2) prepare.py (影像資料集轉換)
 - (T3) train.py (可用於建模及預測)
 - (T4) pre-train model (keras save model)
-- (T5) datasets: image samples (600+ 分鐘影像資料集，每分鐘有30張維度為 240, 352 JPEG 照片)、cctvid-vd-dest-cctv_url.csv (即時影像及車速偵測器地理對應表)、python virtualenv & requirment.txt
+- (T5) [image samples](https://drive.google.com/file/d/1c7woFGnUlsdYvAyZ6SLR0rNyqEt4y18q/view?usp=sharing) (600+ 分鐘影像資料集，每分鐘有30張維度為 240, 352 JPEG 照片)、[cctvid-vd-dest-cctv_url.csv](cctvid-vd-dest-cctv_url.csv) (即時影像及車速偵測器地理對應表)、[pre-train model weight](https://drive.google.com/file/d/1sOK32x8buCID0mxAoz8g5o5p-YoXmjSe/view?usp=sharing)、[requirements.txt](requirements.txt)。
 
 ## (T1) feed.py
 使用說明 `./feed.py -h`
