@@ -311,4 +311,6 @@ Fri Mar  9 07:38:40 2018
 - model paerms: 16496297
 - (5648/238)*30=711.9 images/sec 
 
+![NCHC Infra-Serv Team](https://snag.gy/WpiKMB.jpg "NCHC Infra-Serv Team")
+
 
