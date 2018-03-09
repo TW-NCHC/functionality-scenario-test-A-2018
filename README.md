@@ -1,5 +1,7 @@
 # NCHC functionality scenario test "Task A:Visual-Speed Dection"
 
+![Diagram](https://snag.gy/0QITS9.jpg)
+
 This is toolkits for deploy "Task A:Visual-Speed Dection", including following scripts
 - (T1) feed.py (取得即時路況資料影像，並轉換存為以時間戳記為檔名的即時影像)
 - (T2) prepare.py (影像資料集轉換)
