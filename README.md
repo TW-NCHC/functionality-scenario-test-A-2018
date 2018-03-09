@@ -206,7 +206,7 @@ Epoch 7/20
 ```
 
 ### 
-1. 測試預測功能 `./train.py -s -i $IMG_PATH` 會自動載入在 $WEIGHT_PATH 目錄中最好的模型結果，從 $IMG_PATH 取得最新的車速影像(使用 T1 工具取得)的 30張進行預測。預測結果會 http://$ADDRESS_IP:%SERVE_PORT 以文字顯示。
+1. 測試預測功能 `./train.py -s -i $IMG_PATH` 會自動載入在 $WEIGHT_PATH 目錄中最好的模型結果，從 `$IMG_PATH` 取得最新的車速影像(使用 T1 工具取得)的 30張進行預測。預測結果會 `http://$ADDRESS_IP:%SERVE_PORT` 以文字顯示。
 
 僅使用 CPU 進行預測的輸出結果 command line 如下：
 ```
