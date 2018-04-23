@@ -223,8 +223,9 @@ def predictor(weight_path="./weights", opath="./cctv_imgs", token = "nfbCCTV-N1-
 def getCurrentSpeed():
     global _weight_path_
     global _img_path_
+    global _serve_token_
     start = time.time()
-    res = predictor(weight_path=_weight_path_, opath=_img_path_)
+    res = predictor(weight_path=_weight_path_, opath=_img_path_, token = _serve_token_)
     end = time.time()
     print( "Model building time: %.4f seconds."%(end - start) )
     return res
@@ -268,9 +269,11 @@ def main():
         global _weight_path_
         global _img_path_
         global _model_
+        global _serve_token_
 
         _weight_path_= options.weight_path
         _img_path_   = options.img_path
+        _serve_token_= options.token
         _model_ = getBestModel()
 
         app.run(host=options.address_ip, port=options.serve_port)
