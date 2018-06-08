@@ -101,10 +101,9 @@ def inRange(point):
         pass
     return (point, None)
 
-def preparing(opath = "./cctv_imgs", token = "nfbCCTV-N1-N-90.01-M", dest = "./datasets", isTest=False):
+def preparing(csv_fn = "./cctvid-vd-dest-cctv_url.csv", opath = "./cctv_imgs", token = "nfbCCTV-N1-N-90.01-M", dest = "./datasets", isTest=False):
     global lots
     DIR = "%s/%s"%(opath, token)
-    csv_fn = "./cctvid-vd-dest-cctv_url.csv"
 
     # get vdid info.
     try:
@@ -262,6 +261,9 @@ def main():
     parser.add_option('-d', '--datasets_path', dest='datasets_path',
             default="./datasets",
             help='destination path for pickled(dill) datasets, default="./datasets"')
+    parser.add_option('-f', '--csv_file', dest='file',
+	            default="cctvid-vd-dest-cctv_url.csv",
+	            help="read csv file for current cctvid-vd-dest-cctv_url information, default=cctvid-vd-dest-cctv_url.csv")
     parser.add_option('-c', '--cctvid', dest='cctvid',
             default="nfbCCTV-N1-N-90.01-M",
             help='preparing datasets for "nfbCCTV-N1-N-90.01-M", default="nfbCCTV-N1-N-90.01-M"')
@@ -273,7 +275,7 @@ def main():
 
     logging.basicConfig(level=logging.INFO)
 
-    preparing(options.img_path, options.cctvid, options.datasets_path, options.isTest)
+    preparing(options.file,options.img_path, options.cctvid, options.datasets_path, options.isTest)
 
 
 if __name__ == "__main__":
