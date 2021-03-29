@@ -46,7 +46,7 @@ protobuf==3.5.2
 ptyprocess==0.5.2
 pycosat==0.6.3
 pycparser==2.18
-Pygments==2.2.0
+Pygments==2.7.4
 pyOpenSSL==17.5.0
 PySocks==1.6.8
 python-dateutil==2.6.1
